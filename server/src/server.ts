@@ -29,6 +29,14 @@ function getSocketData(socket: Socket): ISocketData {
 
 const pendingPlayers = new Set<Socket>();
 
+interface ICurrentPlayer {
+  [key: string] : Socket;
+}
+
+const currentPlayers : ICurrentPlayer = {};
+
+const leaderBoard : Map<string,number> = new Map<string,number>();
+
 // Cette méthode permet d'envoyer un message à un client.
 // Elle s'occupe d'exécuter la sérialisation et l'envoi
 // en binaire sur le réseau.
@@ -51,11 +59,19 @@ function processData(socket: Socket, data: Buffer) {
 // Lorsqu'un message est reçu, cette méthode est appelée
 // et, selon le message reçu, une action est exécutée.
 function onMessage(socket: Socket, message: Messages.NetworkMessage | null) {
+  
   if (message instanceof Messages.NetworkLogin) {
+    console.log("NetworkLogin");
     onNetworkLogin(socket, message);
   }
   if (message instanceof Messages.NetworkInputChanged) {
+    console.log("NetworkInputChanged");
     sendMessage(getSocketData(socket).otherPlayer!, message);
+  }
+  if (message instanceof Messages.NetworkScore) {
+    console.log("reception du message de mort");
+    leaderBoard.set(message.scoreS.name,message.scoreS.score);
+    sendMessage(getSocketData(socket).otherPlayer!,message);
   }
 }
 

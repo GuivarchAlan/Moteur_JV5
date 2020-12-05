@@ -204,6 +204,43 @@ export class NetworkInputChanged extends NetworkMessage {
   }
 }
 
+export interface IScore {
+  name: string;
+  score: number;
+}
+
+export class NetworkScore extends NetworkMessage {
+ 
+  public static typeCode = 1000;
+
+  public scoreS!: IScore;
+
+   // ## Méthode *build*
+  // Initialise les valeurs lors de la création d'une nouvelle
+  // instance de ce message.
+  public build(score: IScore) {
+    this.typeCode = NetworkScore.typeCode;
+    this.scoreS = score;
+  }
+
+  // ## Méthode *serialize*
+
+  public serialize(serializer: ISerializer) {
+    super.serialize(serializer);
+    serializer.writeString(this.scoreS.name);
+    serializer.writeU8(this.scoreS.score);
+  }
+
+  // ## Méthode *deserialize*
+
+  public deserialize(deserializer: IDeserializer) {
+    super.deserialize(deserializer);
+      const k = deserializer.readString();
+      const v = deserializer.readU8();
+      this.scoreS.name = k;
+      this.scoreS.score = v;
+  }
+}
 // # Enregistrement des types de message
 // Ces instructions sont exécutées lors du chargement de ce
 // fichier de script, et permettent d'enregistrer les types
@@ -211,3 +248,4 @@ export class NetworkInputChanged extends NetworkMessage {
 NetworkMessage.register(NetworkLogin);
 NetworkMessage.register(NetworkStart);
 NetworkMessage.register(NetworkInputChanged);
+NetworkMessage.register(NetworkScore);

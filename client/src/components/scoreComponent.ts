@@ -1,23 +1,33 @@
 import { EventTrigger } from "../eventTrigger";
 import { Component } from "./component";
 import { TextSpriteComponent } from "./textSpriteComponent";
+import { IScore, NetworkScore } from "../../../common/messages";
+import { NetworkingComponent } from "./networkingComponent";
+import { PlayerComponent } from "./playerComponent";
 
 // # Classe *ScoreComponent*
 interface IScoreComponentDesc {
+  networking: string;
   scoreSprite: string;
+  player: string;
 }
 
 export class ScoreComponent extends Component<IScoreComponentDesc> {
   private scoreChangedEvent = new EventTrigger();
   private scoreSprite!: TextSpriteComponent;
   private _value!: number;
+  private networking!: NetworkingComponent;
+  private player!: PlayerComponent;
 
-  // ## Méthode *setup*
   // Cette méthode conserve le composant de texte qui affiche
   // le pointage, et initialise sa valeur.
   public setup(descr: IScoreComponentDesc) {
     this.scoreSprite = Component.findComponent<TextSpriteComponent>(descr.scoreSprite)!;
+    this.networking = Component.findComponent<NetworkingComponent>(descr.networking)!;
+    this.player = Component.findComponent<PlayerComponent>(descr.player)!;
     this.value = 0;
+    //this.networking.messageEvent.add(this,this.onMessage);
+    //this.networking.create();
   }
 
   // ## Propriété *value*
@@ -31,5 +41,17 @@ export class ScoreComponent extends Component<IScoreComponentDesc> {
     this._value = newVal;
     this.scoreChangedEvent.trigger(this.value);
     this.scoreSprite.text = this.value.toString();
+
+    let msg = new NetworkScore();
+    msg.build({name : this.player.name, score : this.value});
+    this.networking.send(msg);
   }
+/*
+  private onMessage(msg: NetworkScore) {
+    if (!(msg instanceof NetworkScore)) {
+      return;
+    }
+    console.log(msg.scoreS.name + "   " + msg.scoreS.score);
+  }
+*/
 }

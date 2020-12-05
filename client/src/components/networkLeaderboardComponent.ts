@@ -1,4 +1,5 @@
-import { NetworkMessage /* etc. */ } from "../../../common/messages";
+import { NetworkMessage, /* etc. */ 
+NetworkScore} from "../../../common/messages";
 import { Component } from "./component";
 import { NetworkingComponent } from "./networkingComponent";
 
@@ -44,14 +45,19 @@ export class NetworkLeaderboardComponent extends Component<INetLeaderboardDesc> 
     this.networking.messageEvent.add(this, this.onMessage);
 
     // # TODO: À enlever lorsque l'implémentation est complète
-    this.debugStartTest("Test 1", 1234, 0.2);
-    this.debugStartTest("Test 2", 750, 0.4);
+    //this.debugStartTest("Test 1", 1234, 0.2);
+    //this.debugStartTest("Test 2", 750, 0.4);
   }
 
   // ## Méthode *onMessage*
   // Cette méthode est déclenchée quand un message réseau est reçu
   private onMessage(msg: NetworkMessage) {
     // # TODO: Implémenter le fonctionnement
+    if (!(msg instanceof NetworkScore)) {
+      return;
+    }
+    console.log("oskour");
+    this.setScore(msg.scoreS.name,msg.scoreS.score);
   }
 
   // ## Méthode *debugStartTest*
