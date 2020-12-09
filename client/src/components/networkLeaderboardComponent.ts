@@ -1,4 +1,4 @@
-import { NetworkMessage, /* etc. */ 
+import { NetworkLeaderBoard, NetworkMessage, /* etc. */ 
 NetworkScore} from "../../../common/messages";
 import { Component } from "./component";
 import { NetworkingComponent } from "./networkingComponent";
@@ -43,32 +43,30 @@ export class NetworkLeaderboardComponent extends Component<INetLeaderboardDesc> 
     this.template = document.getElementById(descr.template)!;
 
     this.networking.messageEvent.add(this, this.onMessage);
-
-    // # TODO: À enlever lorsque l'implémentation est complète
-    //this.debugStartTest("Test 1", 1234, 0.2);
-    //this.debugStartTest("Test 2", 750, 0.4);
   }
 
   // ## Méthode *onMessage*
   // Cette méthode est déclenchée quand un message réseau est reçu
   private onMessage(msg: NetworkMessage) {
     // # TODO: Implémenter le fonctionnement
-    if (!(msg instanceof NetworkScore)) {
+    if (!(msg instanceof NetworkLeaderBoard)) {
       return;
     }
-    console.log("oskour");
-    this.setScore(msg.scoreS.name,msg.scoreS.score);
-  }
-
-  // ## Méthode *debugStartTest*
-  // Cette méthode met à jour un score fictif afin de valider le
-  // fonctionnement du système. À effacer lorsque l'implémentation
-  // est complète.
-  private debugStartTest(name: string, score: number, freq: number) {
-    setInterval(() => {
-      this.setScore(name, score);
-      score += 250;
-    }, 1000.0 / freq);
+    this.scores[msg.toremove]
+    var newscore : IScoreMap = {}
+    if (msg.toremove !== "") {
+      for (const pName in this.scores) {
+        if (pName != msg.toremove) {
+          newscore[pName] = {
+            node: this.scores[pName].node,
+            scoreNode: this.scores[pName].scoreNode,
+            value: this.scores[pName].value,
+          };
+        }
+      }
+      this.scores = newscore;
+    }
+    this.setScore(msg.name,msg.score);
   }
 
   // ## Méthode *setScore*

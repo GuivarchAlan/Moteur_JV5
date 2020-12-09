@@ -208,37 +208,124 @@ export interface IScore {
   name: string;
   score: number;
 }
-
+/*
 export class NetworkScore extends NetworkMessage {
  
   public static typeCode = 1000;
-
-  public scoreS!: IScore;
+  public name!: string;
+  public score!: number;
 
    // ## Méthode *build*
   // Initialise les valeurs lors de la création d'une nouvelle
   // instance de ce message.
-  public build(score: IScore) {
+  public build(msg: IScore) {
     this.typeCode = NetworkScore.typeCode;
-    this.scoreS = score;
+    this.name = msg.name;
+    this.score = msg.score;
   }
 
   // ## Méthode *serialize*
 
   public serialize(serializer: ISerializer) {
     super.serialize(serializer);
-    serializer.writeString(this.scoreS.name);
-    serializer.writeU8(this.scoreS.score);
+    serializer.writeString(this.name);
+    serializer.writeU8(this.score);
   }
 
   // ## Méthode *deserialize*
 
   public deserialize(deserializer: IDeserializer) {
     super.deserialize(deserializer);
-      const k = deserializer.readString();
-      const v = deserializer.readU8();
-      this.scoreS.name = k;
-      this.scoreS.score = v;
+    this.name = deserializer.readString();
+    this.score = deserializer.readU8();
+  }
+}
+*/
+
+// # Classe *NetworkScore*
+// Ce message permet de transférer les informations nécessaires
+// lors de la connexion d'un joueur.
+export class NetworkScore extends NetworkMessage {
+  // ## Constante *typeCode*
+  // Représente l'identifiant numérique de ce message
+  public static typeCode = 3;
+
+  public name!: string;
+  public score!: number;
+
+  // ## Méthode *build*
+  // Initialise les valeurs lors de la création d'une nouvelle
+  // instance de ce message.
+  public build(msg: IScore) {
+    this.typeCode = NetworkScore.typeCode;
+    this.name = msg.name;
+    this.score = msg.score;
+  }
+
+  // ## Méthode *serialize*
+  // Cette méthode permet d'enregistrer le contenu du message
+  // dans un format pouvant être transféré.
+  public serialize(serializer: ISerializer) {
+    super.serialize(serializer);
+    serializer.writeString(this.name);
+    serializer.writeU8(this.score);
+  }
+
+  // ## Méthode *deserialize*
+  // Cette méthode permet de reconstituer le contenu du message
+  // à partir des données reçues.
+  public deserialize(deserializer: IDeserializer) {
+    super.deserialize(deserializer);
+    this.name = deserializer.readString();
+    this.score = deserializer.readU8();
+  }
+}
+
+export interface ILeaderBoard {
+  name: string;
+  score: number;
+  toremove: string;
+}
+
+// # Classe *NetworkLeaderBoard*
+// Ce message permet de transférer les informations nécessaires
+// lors de la connexion d'un joueur.
+export class NetworkLeaderBoard extends NetworkMessage {
+  // ## Constante *typeCode*
+  // Représente l'identifiant numérique de ce message
+  public static typeCode = 4;
+
+  public name!: string;
+  public score!: number;
+  public toremove! : string;
+  // ## Méthode *build*
+  // Initialise les valeurs lors de la création d'une nouvelle
+  // instance de ce message.
+  public build(msg: ILeaderBoard) {
+    this.typeCode = NetworkLeaderBoard.typeCode;
+    this.name = msg.name;
+    this.score = msg.score;
+    this.toremove = msg.toremove;
+  }
+
+  // ## Méthode *serialize*
+  // Cette méthode permet d'enregistrer le contenu du message
+  // dans un format pouvant être transféré.
+  public serialize(serializer: ISerializer) {
+    super.serialize(serializer);
+    serializer.writeString(this.name);
+    serializer.writeU8(this.score);
+    serializer.writeString(this.toremove);
+  }
+
+  // ## Méthode *deserialize*
+  // Cette méthode permet de reconstituer le contenu du message
+  // à partir des données reçues.
+  public deserialize(deserializer: IDeserializer) {
+    super.deserialize(deserializer);
+    this.name = deserializer.readString();
+    this.score = deserializer.readU8();
+    this.toremove = deserializer.readString();
   }
 }
 // # Enregistrement des types de message
@@ -249,3 +336,4 @@ NetworkMessage.register(NetworkLogin);
 NetworkMessage.register(NetworkStart);
 NetworkMessage.register(NetworkInputChanged);
 NetworkMessage.register(NetworkScore);
+NetworkMessage.register(NetworkLeaderBoard);

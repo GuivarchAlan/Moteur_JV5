@@ -1,7 +1,7 @@
 import { EventTrigger } from "../eventTrigger";
 import { Component } from "./component";
 import { TextSpriteComponent } from "./textSpriteComponent";
-import { IScore, NetworkScore } from "../../../common/messages";
+import { NetworkScore } from "../../../common/messages";
 import { NetworkingComponent } from "./networkingComponent";
 import { PlayerComponent } from "./playerComponent";
 
@@ -26,8 +26,6 @@ export class ScoreComponent extends Component<IScoreComponentDesc> {
     this.networking = Component.findComponent<NetworkingComponent>(descr.networking)!;
     this.player = Component.findComponent<PlayerComponent>(descr.player)!;
     this.value = 0;
-    //this.networking.messageEvent.add(this,this.onMessage);
-    //this.networking.create();
   }
 
   // ## Propriété *value*
@@ -41,17 +39,10 @@ export class ScoreComponent extends Component<IScoreComponentDesc> {
     this._value = newVal;
     this.scoreChangedEvent.trigger(this.value);
     this.scoreSprite.text = this.value.toString();
-
-    let msg = new NetworkScore();
-    msg.build({name : this.player.name, score : this.value});
-    this.networking.send(msg);
-  }
-/*
-  private onMessage(msg: NetworkScore) {
-    if (!(msg instanceof NetworkScore)) {
-      return;
+    if (this.player.isLocal) {
+      const msg = new NetworkScore();
+      msg.build({name : this.player.name, score: this.value});
+      this.networking.send(msg);
     }
-    console.log(msg.scoreS.name + "   " + msg.scoreS.score);
   }
-*/
 }
