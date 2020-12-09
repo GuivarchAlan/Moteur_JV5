@@ -72,7 +72,7 @@ function onMessage(socket: Socket, message: Messages.NetworkMessage | null, id: 
     updateLeaderBoard(socket,message,id);
   }
 }
-
+// permet de mettre à jour le LeaderBoard si nécessaire
 function updateLeaderBoard(socket: Socket, message: Messages.NetworkScore, id: number) {
   var toChange = false;
   var toRemove = "";
@@ -107,6 +107,7 @@ function updateLeaderBoard(socket: Socket, message: Messages.NetworkScore, id: n
     });
   }
   if (toChange) {
+    // si un changement est fait sur le leaderBoard envoie des scores à modifier aux joueurs
     const msg = new NetworkLeaderBoard();
     msg.build({name: message.name, score: message.score, toremove: toRemove})
     socketData.forEach((sockData, sock) => {

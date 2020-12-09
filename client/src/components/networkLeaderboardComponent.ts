@@ -48,24 +48,32 @@ export class NetworkLeaderboardComponent extends Component<INetLeaderboardDesc> 
   // ## Méthode *onMessage*
   // Cette méthode est déclenchée quand un message réseau est reçu
   private onMessage(msg: NetworkMessage) {
-    // # TODO: Implémenter le fonctionnement
     if (!(msg instanceof NetworkLeaderBoard)) {
       return;
     }
-    this.scores[msg.toremove]
-    var newscore : IScoreMap = {}
     if (msg.toremove !== "") {
+      var isInScore = false;
+      // verifie si le joueur se trouve déja dans leaderboard si non on retire le plus petit score
       for (const pName in this.scores) {
-        if (pName != msg.toremove) {
-          newscore[pName] = {
-            node: this.scores[pName].node,
-            scoreNode: this.scores[pName].scoreNode,
-            value: this.scores[pName].value,
-          };
+        if (pName == msg.name) {
+          isInScore = true;
         }
       }
-      this.scores = newscore;
+      if(!isInScore) {
+        var newscore : IScoreMap = {};
+        for (const pName in this.scores) {
+          if (pName != msg.toremove) {
+            newscore[pName] = {
+              node: this.scores[pName].node,
+              scoreNode: this.scores[pName].scoreNode,
+              value: this.scores[pName].value,
+            };
+          }
+        }
+        this.scores = newscore;
+      }
     }
+    // ajoute le score au leaderboard des joueurs
     this.setScore(msg.name,msg.score);
   }
 

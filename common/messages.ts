@@ -208,43 +208,10 @@ export interface IScore {
   name: string;
   score: number;
 }
-/*
-export class NetworkScore extends NetworkMessage {
- 
-  public static typeCode = 1000;
-  public name!: string;
-  public score!: number;
-
-   // ## Méthode *build*
-  // Initialise les valeurs lors de la création d'une nouvelle
-  // instance de ce message.
-  public build(msg: IScore) {
-    this.typeCode = NetworkScore.typeCode;
-    this.name = msg.name;
-    this.score = msg.score;
-  }
-
-  // ## Méthode *serialize*
-
-  public serialize(serializer: ISerializer) {
-    super.serialize(serializer);
-    serializer.writeString(this.name);
-    serializer.writeU8(this.score);
-  }
-
-  // ## Méthode *deserialize*
-
-  public deserialize(deserializer: IDeserializer) {
-    super.deserialize(deserializer);
-    this.name = deserializer.readString();
-    this.score = deserializer.readU8();
-  }
-}
-*/
 
 // # Classe *NetworkScore*
-// Ce message permet de transférer les informations nécessaires
-// lors de la connexion d'un joueur.
+// Ce message permet de transférer un nouveau
+// score vers le serveur
 export class NetworkScore extends NetworkMessage {
   // ## Constante *typeCode*
   // Représente l'identifiant numérique de ce message
@@ -289,15 +256,15 @@ export interface ILeaderBoard {
 
 // # Classe *NetworkLeaderBoard*
 // Ce message permet de transférer les informations nécessaires
-// lors de la connexion d'un joueur.
+// pour mettre à jour le leaderboard
 export class NetworkLeaderBoard extends NetworkMessage {
   // ## Constante *typeCode*
   // Représente l'identifiant numérique de ce message
   public static typeCode = 4;
 
-  public name!: string;
-  public score!: number;
-  public toremove! : string;
+  public name!: string; // nouveau score
+  public score!: number;  // nom du nouveau score
+  public toremove! : string; // score à retirer
   // ## Méthode *build*
   // Initialise les valeurs lors de la création d'une nouvelle
   // instance de ce message.

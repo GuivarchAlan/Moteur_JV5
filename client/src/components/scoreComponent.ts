@@ -20,7 +20,7 @@ export class ScoreComponent extends Component<IScoreComponentDesc> {
   private player!: PlayerComponent;
 
   // Cette méthode conserve le composant de texte qui affiche
-  // le pointage, et initialise sa valeur.
+  // le pointage, initialise sa valeur et conserve un NetworkComponent pour envoyé le score du joueur au serveur.
   public setup(descr: IScoreComponentDesc) {
     this.scoreSprite = Component.findComponent<TextSpriteComponent>(descr.scoreSprite)!;
     this.networking = Component.findComponent<NetworkingComponent>(descr.networking)!;
